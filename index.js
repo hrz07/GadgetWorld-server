@@ -36,13 +36,20 @@ async function run() {
         })
 
         // delete an item
-
         app.delete('/item/:id', async (req,res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await itemCollection.deleteOne(query)
             res.send(result);
 
+        })
+
+        // get specific users item
+        app.get('/item', async (req,res) => {
+            const email = req.query.email;
+            const query = { supplierEmail: email }
+            const result = await itemCollection.get(query).toArray()
+            res.send(result).status(200)
         })
 
     }
