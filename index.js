@@ -48,7 +48,7 @@ async function run() {
         app.get('/item', async (req,res) => {
             const email = req.query.email;
             const query = { supplierEmail: email }
-            const result = await itemCollection.get(query).toArray()
+            const result = await itemCollection.find(query).toArray()
             res.send(result).status(200)
         })
 
