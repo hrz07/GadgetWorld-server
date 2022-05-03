@@ -35,6 +35,15 @@ async function run() {
             res.send(result).status(200)
         })
 
+        //get item by id
+
+        app.get('/item/:id', async (req,res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await itemCollection.findOne(query)
+            res.send(result);
+        })
+
         // delete an item
         app.delete('/item/:id', async (req,res) => {
             const id = req.params.id;
@@ -50,6 +59,23 @@ async function run() {
             const query = { supplierEmail: email }
             const result = await itemCollection.find(query).toArray()
             res.send(result).status(200)
+        })
+
+        //update quantity
+        app.patch('/item/:id', async(req, res) => {
+            const id = req.params.id;
+            const updatedQuantity = req.body.amount;
+            
+            const query = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {    
+                    quantity: updatedQuantity
+                }
+            };
+            const result = await itemCollection.updateOne(query, updatedDoc, options);
+            res.send(result);
+    
         })
 
     }
