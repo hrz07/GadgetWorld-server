@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config()
 const PORT = 4000
 
 
@@ -78,7 +80,14 @@ async function run() {
     
         })
 
-    }
+        // login jwt
+        app.post('/login', async (req, res) => {
+            const email = req.body;
+            const token = jwt.sign(email, process.env.ACCESS_TOKEN)
+            res.send({token})
+            })
+
+        }
     finally {
         
     }
