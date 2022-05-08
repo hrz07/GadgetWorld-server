@@ -4,7 +4,7 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
-const PORT = 4000
+const port = process.env.PORT || 4000
 
 
 
@@ -12,7 +12,7 @@ const PORT = 4000
 app.use(cors())
 app.use(express.json())
 
-const uri = "mongodb+srv://dbUser:aInjbamqwHeHdGYI@cluster0.nwarn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB}:${process.env.PASS}@cluster0.nwarn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
@@ -71,7 +71,7 @@ async function run() {
             const decoded = verifyToken(accessToken)
 
             const query = { supplierEmail: email }
-
+        
             if (email1 === decoded.email) {
                 const result = await itemCollection.find(query).toArray()
                 res.send(result).status(200)
@@ -85,12 +85,13 @@ async function run() {
         app.patch('/item/:id', async (req, res) => {
             const id = req.params.id;
             const updatedQuantity = req.body.amount;
-
+            const sold = req.body.sold
             const query = { _id: ObjectId(id) }
             const options = { upsert: true };
             const updatedDoc = {
                 $set: {
-                    quantity: updatedQuantity
+                    quantity: updatedQuantity,
+                    sold: sold
                 }
             };
             const result = await itemCollection.updateOne(query, updatedDoc, options);
@@ -117,7 +118,7 @@ run().catch(console.dir);
 
 // server run
 
-app.listen(process.env.PORT || PORT, () => {
+app.listen(port, () => {
     console.log('server started');
 })
 
