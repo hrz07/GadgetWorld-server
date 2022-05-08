@@ -122,6 +122,9 @@ app.listen(port, () => {
     console.log('server started');
 })
 
+app.get('/',(req,res)=>{
+res.send('Heroku  is working')
+})
 
 
 function verifyToken(token) {
